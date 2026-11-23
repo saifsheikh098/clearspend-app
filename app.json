@@ -5,15 +5,25 @@
     "owner": "saifsheikh09s-team",
     "version": "1.0.0",
     "orientation": "portrait",
+    "icon": "./icon.png",
     "scheme": "clearspend",
     "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.clearspend.app"
     },
     "android": {
       "package": "com.clearspend.app",
-      "versionCode": 1
+      "versionCode": 1,
+      "adaptiveIcon": {
+        "foregroundImage": "./icon.png",
+        "backgroundColor": "#ffffff"
+      }
     },
     "web": {
       "bundler": "metro",
