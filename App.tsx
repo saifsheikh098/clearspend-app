@@ -1,3 +1,4 @@
+import { registerRootComponent } from 'expo';
 import React, { useEffect, useState } from 'react';
 import { SafeAreaView, Text, View, TouchableOpacity } from 'react-native';
 import HomeScreen from './src/screens/HomeScreen';
@@ -35,3 +36,5 @@ export default function App() {
     </SafeAreaView>
   );
 }
+
+registerRootComponent(App);
