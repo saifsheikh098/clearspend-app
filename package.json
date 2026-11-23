@@ -25,7 +25,8 @@
     "@supabase/auth-js": "2.64.0",
     "@supabase/functions-js": "2.1.5",
     "@supabase/postgrest-js": "1.15.3",
-    "@supabase/realtime-js": "2.9.4"
+    "@supabase/realtime-js": "2.9.4",
+    "@supabase/gotrue-js": "2.64.0"
   },
   "devDependencies": {
     "@babel/core": "^7.24.0",
