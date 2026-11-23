@@ -1,10 +1,17 @@
 import { createClient } from '@supabase/supabase-js';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-// Supabase - Future me yahi DB banega.
-// Abhi local pe chalega, jab key daaloge to cloud sync on.
-const url = process.env.EXPO_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co';
-const anon = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY || 'placeholder-key';
+function cleanEnv(val?: string): string {
+  return (val || '').trim().replace(/^['"]|['"]$/g, '');
+}
+
+const rawUrl = cleanEnv(process.env.EXPO_PUBLIC_SUPABASE_URL);
+const rawAnon = cleanEnv(process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY);
+
+const url = rawUrl.startsWith('http://') || rawUrl.startsWith('https://')
+  ? rawUrl
+  : 'https://placeholder.supabase.co';
+const anon = rawAnon || 'placeholder-key';
 
 export const supabase = createClient(url, anon, {
   auth: {
@@ -15,7 +22,6 @@ export const supabase = createClient(url, anon, {
   }
 });
 
-// Tables: profiles, transactions, budgets - schema.sql me hai
 export type Transaction = {
   id?: string;
   user_id?: string;
