@@ -1,10 +1,5 @@
 // ClearSpend Multi-AI - Auto Switch
-// Credit khatam hote hi dusri API pe switch ho jayega
-
-// Keys .env me comma se alag karke daalni hai
-// EXPO_PUBLIC_GROQ_KEYS=gsk_111,gsk_222,gsk_333
-// EXPO_PUBLIC_OPENROUTER_KEYS=sk-or-111,sk-or-222
-// EXPO_PUBLIC_GEMINI_KEYS=AIza-111,AIza-222
+// Groq 1 -> Gemini, credit khatam hote hi apne aap switch
 
 function getKeys(name: string): string[] {
   const raw = process.env[name] || '';
@@ -15,8 +10,11 @@ const GROQ_KEYS = getKeys('EXPO_PUBLIC_GROQ_KEYS');
 const OPENROUTER_KEYS = getKeys('EXPO_PUBLIC_OPENROUTER_KEYS');
 const GEMINI_KEYS = getKeys('EXPO_PUBLIC_GEMINI_KEYS');
 
-// Agar purani single key hai to bhi chalegi
+// Expo me jo naam tune save kiye hain - wahi wale
 if (process.env.EXPO_PUBLIC_GROQ_API_KEY) GROQ_KEYS.push(process.env.EXPO_PUBLIC_GROQ_API_KEY);
+if (process.env.EXPO_PUBLIC_GROQ_API_KEY_1) GROQ_KEYS.push(process.env.EXPO_PUBLIC_GROQ_API_KEY_1);
+if (process.env.EXPO_PUBLIC_GEMINI_API_KEY) GEMINI_KEYS.push(process.env.EXPO_PUBLIC_GEMINI_API_KEY);
+if (process.env.EXPO_PUBLIC_GEMINI_KEYS) GEMINI_KEYS.push(...getKeys('EXPO_PUBLIC_GEMINI_KEYS'));
 
 async function callGroq(key: string, messages: any[]) {
   const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
@@ -56,7 +54,6 @@ export async function askAI(messages: { role: string; content: string }[], trans
   const context = `User ke transactions: ${JSON.stringify(transactions.slice(0, 20))}. Tu ClearSpend ka AI assistant hai. Hindi + English mix me short jawab de. Budget advice de.`;
   const fullMessages = [{ role: 'system', content: context }, ...messages];
 
-  // 1. Pehle saari Groq keys try karo
   for (const key of GROQ_KEYS) {
     try {
       const ans = await callGroq(key, fullMessages);
@@ -64,7 +61,6 @@ export async function askAI(messages: { role: string; content: string }[], trans
     } catch (e) { console.log('Groq fail, next try...'); }
   }
 
-  // 2. Phir OpenRouter keys
   for (const key of OPENROUTER_KEYS) {
     try {
       const ans = await callOpenRouter(key, fullMessages);
@@ -72,7 +68,6 @@ export async function askAI(messages: { role: string; content: string }[], trans
     } catch (e) { console.log('OpenRouter fail, next try...'); }
   }
 
-  // 3. Last me Gemini keys
   for (const key of GEMINI_KEYS) {
     try {
       const ans = await callGemini(key, fullMessages);
@@ -82,7 +77,3 @@ export async function askAI(messages: { role: string; content: string }[], trans
 
   return 'Saari AI keys khatam / fail ho gayi. Thodi der baad try karo ya nayi key daalo.';
 }
-
-// Purani file groq.ts ko delete mat karo, ye ai.ts uski jagah lega
-// AIChatScreen me import badalna hai:
-// import { askAI } from '../lib/groq'  ->  import { askAI } from '../lib/ai'
